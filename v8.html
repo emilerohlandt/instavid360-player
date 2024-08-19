@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=0.98, maximum-scale=0.98"
+    />
+    <title>Spin360 player - 0.8</title>
+  </head>
+  <body style="margin: 0;">
+    <div id="spin-div" style="max-width: 100%; margin: 0 auto;"></div>
+    <script>
+      function getParam(k, defaultValue) {
+        var result = null,
+          isPresent = false,
+          tmp = [];
+        location.search
+          .substring(1)
+          .split("&")
+          .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] == k) {
+              isPresent = true;
+              result =
+                typeof tmp[1] !== "undefined" && decodeURIComponent(tmp[1]);
+              result = result && !!result.trim().length ? result.trim() : null;
+              if (result && ["true", "false"].includes(result.toLowerCase())) {
+                result = result == "true";
+              }
+            }
+          });
+
+        return !isPresent && typeof defaultValue !== "undefined"
+          ? defaultValue
+          : result;
+      }
+      var spin =
+        getParam("s") ||
+        "16303531620341_5edd084cd02986cc88410dfa48eaeeb8ae70b6cf1b517b7ea";
+      var video = getParam("vid");
+      if (
+        spin ==
+        "16303531620341_5edd084cd02986cc88410dfa48eaeeb8ae70b6cf1b517b7ea"
+      ) {
+        if (video !== "") {
+          video =
+            "https://static.instavid360.com/iv/dealer/704/portal/portal-7-20210830-080951-IdnV0Jdl_720.mp4";
+        }
+      }
+      var dataAttr = {
+        portal: getParam("p"),
+        vin: getParam("v"),
+        spin: spin,
+        smoothing: getParam("f"),
+        quality: getParam("q"),
+        language: getParam("l"),
+        angleDisplay: getParam("a"),
+        video: video,
+        hotspotType: getParam("ht"),
+        aspectratio: getParam("ar") || "16:9",
+        "exterior-keyframes": getParam("ekf"),
+        "interior-keyframes": getParam("ikf"),
+        "control-titles": getParam("ct")
+      };
+      function loadSpinScript() {
+        script = document.createElement("script");
+        script.type = "text/javascript";
+        script.async = true;
+        Object.keys(dataAttr).forEach(function (k) {
+          for (k in dataAttr) {
+            if (typeof dataAttr[k] !== "undefined" && dataAttr[k] !== null) {
+              script.setAttribute("data-" + k, dataAttr[k]);
+            }
+          }
+        });
+        script.src =
+          "https://static.instavid360.com/p/0.8.latest/spin360.lite.js";
+        document.getElementById("spin-div").appendChild(script);
+      }
+      loadSpinScript();
+    </script>
+  </body>
+</html>
